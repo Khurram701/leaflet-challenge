@@ -57,19 +57,33 @@ function initMap() {
   
         // Add a scale control to the map
         L.control.scale().addTo(map);
-  
-        // Add a legend to the map
-        var legend = L.control({ position: "bottomright" });
-        legend.onAdd = function (map) {
-          var div = L.DomUtil.create("div", "legend");
-          div.innerHTML += "<h4>Richter Scale</h4>";
-          div.innerHTML += '<i style="background: #00FF00"></i> <span>0 - 10</span><br>';
-          div.innerHTML += '<i style="background: #FFFF00"></i> <span>10 - 30</span><br>';
-          div.innerHTML += '<i style="background: #FFA500"></i> <span>30 - 50</span><br>';
-          div.innerHTML += '<i style="background: #FF0000"></i> <span>50+</span><br>';
-          return div;
-        };
-        legend.addTo(map);
+
+      let legend = L.control({
+        position: "bottomright"
+      });
+      legend.onAdd = function () {
+        let div = L.DomUtil.create("div", "info legend");
+        let grades = [-10, 10, 30, 50, 70, 90];
+        let colors = [
+          "#98EE00",
+          "#D4EE00",
+          "#EECC00",
+          "#EE9C00",
+          "#EA822C",
+          "#EA2C2C"];
+        // Loop through our intervals and generate a label with a colored square for each interval.
+        for (let i = 0; i < grades.length; i++) {
+          div.innerHTML += "<i style='background: "
+            + colors[i]
+            + "'></i> "
+            + grades[i]
+            + (grades[i + 1] ? "&ndash;" + grades[i + 1] + "<br>" : "+");
+        }
+        return div;
+      };
+      // We add our legend to the map.
+      legend.addTo(map);
+
       })
       .catch(function (error) {
         console.log("Error fetching earthquake data:", error);
@@ -95,7 +109,7 @@ function initMap() {
   }
   
   // Call the initMap function when the DOM is ready
-  document.addEventListener("DOMContentLoaded", initMap);
+  document.addEventListener("DOMContentLoaded", initMap)
 
 
 
